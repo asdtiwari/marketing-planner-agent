@@ -1,0 +1,70 @@
+# ==========================================
+# Backend: Python, FastAPI & AI Tools
+# ==========================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# Environment Variables (CRITICAL SECURITY)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# Local Databases & AI Storage
+chroma_db/
+*.sqlite
+*.sqlite3
+*.db
+
+# CrewAI & LiteLLM logs/cache
+*.log
+.litellm_cache/
+
+# ==========================================
+# Frontend: Node, React & Vite
+# ==========================================
+
+# Dependencies
+node_modules/
+package-lock.json # Optional: Remove if you want to track exact npm versions
+
+# Production Builds
+dist/
+dist-ssr/
+build/
+
+# Node & npm logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# General: OS & IDE Configurations
+# ==========================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
