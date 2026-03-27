@@ -21,6 +21,7 @@ env/
 *.env
 
 # Local Databases & AI Storage
+chroma_data/
 chroma_db/
 *.sqlite
 *.sqlite3
