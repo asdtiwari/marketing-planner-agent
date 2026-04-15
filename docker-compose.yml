@@ -28,9 +28,11 @@ services:
     environment:
       # Notice how the backend talks to the DB using the container name 'mysql-db'
       - DATABASE_URL=mysql+pymysql://root:${DB_PASSWORD:-root}@mysql-db:3306/marketing_agent
+      - DATABASE_PASSWORD=${DB_PASSWORD:-root}
       - GROQ_API_KEY=${GROQ_API_KEY}
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - SECRET_KEY=${SECRET_KEY}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
     depends_on:
       - mysql-db
     networks:
@@ -45,6 +47,8 @@ services:
     restart: always
     ports:
       - "80:80" # Maps EC2 Port 80 to Nginx Port 80
+    environment:
+      - VITE_API_URL=http://YOUR_NEW_IP:8000
     depends_on:
       - backend-api
     networks:

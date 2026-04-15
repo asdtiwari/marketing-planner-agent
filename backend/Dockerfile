@@ -10,14 +10,10 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first to leverage Docker's layer caching
-# COPY requirements.txt .
+COPY requirements.txt .
 
 # Install Python dependencies
-# RUN pip install --no-cache-dir -r requirements.txt
-
-RUN pip install fastapi uvicorn sqlalchemy pymysql
-RUN pip install "python-jose[cryptography]" PyJWT bcrypt "pydantic[email]"
-RUN pip install crewai litellm chromadb sentence-transformers markdown
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
 COPY . .
