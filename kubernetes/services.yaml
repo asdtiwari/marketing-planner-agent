@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+spec:
+  type: NodePort
+  selector:
+    role: app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30000 # Access via http://EC2-IP:30000
+    - name: api
+      port: 8000
+      targetPort: 8000
+      nodePort: 30001 # Access via http://EC2-IP:30001
