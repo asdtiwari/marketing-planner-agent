@@ -1,0 +1,48 @@
+# 0. EC2 Instance Config
+Name: KubernetesServer
+OS: Ubuntu
+Instance Type: m7i-flex.large
+Key Pair: MyWebServer (not required)
+Networking Setting: Allow SSH and HTTP traffic
+Configure Storage: 30
+
+# 1. Update system and install Docker
+sudo apt-get update && sudo apt-get install -y docker.io
+sudo usermod -aG docker $USER && newgrp docker
+
+# 2. Install kubectl (The K8s CLI)
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# 3. Install Minikube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# 4. Start Minikube using Docker driver
+minikube start --driver=docker
+
+# 5. Install github and clone the project repository
+sudo apt-get update && sudo apt-get install git -y
+git clone https://github.com/asdtiwari/marketing-planner-agent.git
+
+# 6. Navigate to the folder having Kubernetes files
+cd marketing-planner-agent/
+cd kubernetes/
+
+# 7. making clusters
+kubectl apply -f marketing-config.yaml
+kubectl apply -f deployment.yaml 
+kubectl apply -f mysql.yaml 
+kubectl apply -f services.yaml 
+
+# 8. Continuous monitor pod in real time
+kubectl get pods -w
+
+# 9. New Terminal over existing terminal
+screen -S name	# Ctrl + A -> d [to hide current]
+screen -r name 	# re-enter in hidden terminal
+screen -ls 	# know the currently running screen
+
+# 10. Tunneling or Port Forwarding
+kubectl port-forward --address 0.0.0.0 service/frontend-svc 8080:80 	# for frontend
+kubectl port-forward --address 0.0.0.0 service/frontend-svc 8000:8000 	# for backend
