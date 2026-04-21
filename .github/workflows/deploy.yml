@@ -30,6 +30,7 @@ jobs:
           context: ./backend
           push: true
           tags: |
+            ${{ secrets.DOCKER_USERNAME }}/marketing-backend:latest
             ${{ secrets.DOCKER_USERNAME }}/marketing-backend:${{ env.IMAGE_TAG }}
 
       # 🔹 Build and Push Frontend
@@ -39,6 +40,7 @@ jobs:
           context: ./frontend
           push: true
           tags: |
+            ${{ secrets.DOCKER_USERNAME }}/marketing-frontend:latest
             ${{ secrets.DOCKER_USERNAME }}/marketing-frontend:${{ env.IMAGE_TAG }}
 
   deploy-to-ec2:
