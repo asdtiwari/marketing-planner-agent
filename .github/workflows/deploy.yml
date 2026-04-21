@@ -7,7 +7,6 @@ on:
 
 env:
   IMAGE_TAG: ${{ github.run_number }}
-  IMAGE_SHA: ${{ github.sha }}
 
 jobs:
   build-and-push:
@@ -31,9 +30,7 @@ jobs:
           context: ./backend
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/marketing-backend:latest
             ${{ secrets.DOCKER_USERNAME }}/marketing-backend:${{ env.IMAGE_TAG }}
-            ${{ secrets.DOCKER_USERNAME }}/marketing-backend:${{ env.IMAGE_SHA }}
 
       # 🔹 Build and Push Frontend
       - name: Build and Push Frontend
@@ -42,9 +39,7 @@ jobs:
           context: ./frontend
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/marketing-frontend:latest
             ${{ secrets.DOCKER_USERNAME }}/marketing-frontend:${{ env.IMAGE_TAG }}
-            ${{ secrets.DOCKER_USERNAME }}/marketing-frontend:${{ env.IMAGE_SHA }}
 
   deploy-to-ec2:
     name: Deploy to EC2 Kubernetes
