@@ -58,7 +58,7 @@ jobs:
           GROQ_KEY: ${{ secrets.GROQ_API_KEY }}
           OPENROUTER_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           DB_URL: ${{ secrets.DATABASE_URL }}
-          IMAGE_TAG: ${{ github.run_number }}   # 👈 pass version to server
+          IMAGE_TAG: ${{ github.run_number }}   
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
@@ -81,7 +81,7 @@ jobs:
             kubectl apply -f deployment.yaml
             kubectl apply -f services.yaml
 
-            # 🔥 Use versioned images instead of 'latest'
+            # Use versioned images instead of 'latest'
             kubectl set image deployment/marketing-stack \
               backend=${{ secrets.DOCKER_USERNAME }}/marketing-backend:$IMAGE_TAG \
               frontend=${{ secrets.DOCKER_USERNAME }}/marketing-frontend:$IMAGE_TAG
