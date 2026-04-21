@@ -43,22 +43,32 @@ jobs:
     steps:
       - name: Execute Remote SSH Commands
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          GROQ_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENROUTER_KEY: ${{ secrets.OPENROUTER_API_KEY }} # 1. Fetch from GitHub Secrets
+          DB_URL: ${{ secrets.DATABASE_URL }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: GROQ_KEY,OPENROUTER_KEY,DB_URL # 2. Pass it through the SSH tunnel
           script: |
-            # Navigate to the project directory (optional, if you keep K8s files there)
             cd ~/marketing-planner-agent
-            
-            # Pull the latest code (optional, to keep the server in sync)
             git pull origin main
             
-            # Apply configurations just in case they changed
-            kubectl apply -f marketing-config.yaml
-            kubectl apply -f deployment.yaml
+            # 3. Inject it into the Kubernetes ConfigMap
+            kubectl create configmap marketing-config \
+              --from-literal=GROQ_API_KEY="$GROQ_KEY" \
+              --from-literal=OPENROUTER_API_KEY="$OPENROUTER_KEY" \
+              --from-literal=DATABASE_URL="$DB_URL" \
+              --from-literal=VITE_API_URL="/api" \
+              --from-literal=CORS_ORIGINS="*" \
+              --dry-run=client -o yaml | kubectl apply -f -
             
-            # Force Kubernetes to pull the new images and restart the pods
+            kubectl apply -f mysql.yaml
+            kubectl apply -f deployment.yaml
+            kubectl apply -f services.yaml
+            
             kubectl rollout restart deployment marketing-stack
             
-            echo "Deployment Successful!"
+            echo "Deployment and Secret Injection Successful!"
