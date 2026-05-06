@@ -5,10 +5,11 @@ from app.api.dependencies import get_current_token_payload
 from app.models.plan import Plan
 from app.schemas.plan_schema import PlanUpdate, PlanResponse
 from typing import List
+from sqlalchemy.exc import SQLAlchemyError
 
 router = APIRouter(prefix="/api/v1/plans", tags=["Plans History"])
 
-@router.get("/", response_model=List[PlanResponse])
+@router.get("", response_model=List[PlanResponse])
 def get_all_plans(
     db: Session = Depends(get_db),
     token_payload: dict = Depends(get_current_token_payload)
@@ -32,8 +33,14 @@ def rename_plan(
         raise HTTPException(status_code=404, detail="Plan not found or access denied.")
         
     plan.title = plan_data.title
-    db.commit()
-    db.refresh(plan)
+    
+    try:
+        db.commit()
+        db.refresh(plan)
+    except SQLAlchemyError as e:
+        db.rollback() # Revert the broken transaction
+        raise HTTPException(status_code=500, detail="Database error occurred while updating the plan.")
+        
     return plan
 
 @router.delete("/{plan_id}", status_code=status.HTTP_204_NO_CONTENT)
