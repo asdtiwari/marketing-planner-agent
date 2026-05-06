@@ -83,6 +83,10 @@ jobs:
               backend=${{ secrets.DOCKER_USERNAME }}/marketing-backend:$IMAGE_TAG \
               frontend=${{ secrets.DOCKER_USERNAME }}/marketing-frontend:$IMAGE_TAG
 
+            # 🔹 OPTIONAL but useful (forces restart if config changed)
+            kubectl rollout restart deployment marketing-stack
+
+            # 🔹 Wait for rollout
             kubectl rollout status deployment marketing-stack
 
             echo "Deployment with version $IMAGE_TAG successful!"
