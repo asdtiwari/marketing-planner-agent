@@ -15,15 +15,17 @@ spec:
       containers:
       # --- Backend Container ---
       - name: backend
-        image: asdtiwari/marketing-backend:v1
+        image: asdtiwari/marketing-backend:latest
         ports:
         - containerPort: 8000
         envFrom:
         - configMapRef:
             name: marketing-config
+        - secretRef:                  # <-- THIS IS THE MISSING PIECE!
+            name: marketing-secrets
       # --- Frontend Container ---
       - name: frontend
-        image: asdtiwari/marketing-frontend:v1
+        image: asdtiwari/marketing-frontend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
