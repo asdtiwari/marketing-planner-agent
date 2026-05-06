@@ -65,6 +65,16 @@ jobs:
             cd ~/marketing-planner-agent
             git pull origin main
 
+            # ==========================================
+            # 🧹 PRE-DEPLOYMENT DISK CLEANUP 🧹
+            # ==========================================
+            echo "Freeing up space on EC2 Host..."
+            docker system prune -af --volumes
+            
+            echo "Freeing up space inside Minikube..."
+            minikube ssh -- docker system prune -af --volumes
+            # ==========================================
+
             # Navigate to the kubernetes directory
             cd kubernetes
 
